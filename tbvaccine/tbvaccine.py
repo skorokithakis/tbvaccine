@@ -50,7 +50,7 @@ class TBVaccine:
                 "cyan": 36,
                 "gray": 37,
             }
-            text = "\x1b[%dm%s\x1b[m" % (colors[fg], text)
+            text = "\x1b[%d;%dm%s\x1b[m" % (styles[style], colors[fg], text)
         self._buffer += text
 
     def _file_in_dir(self):

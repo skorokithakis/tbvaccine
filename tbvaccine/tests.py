@@ -5,7 +5,7 @@ import pep8
 
 sys.path.insert(0, os.path.abspath(__file__ + "/../.."))
 
-from tbvaccine import TBVaccine
+from tbvaccine import TBVaccine  # noqa
 
 
 class BasicTest(unittest.TestCase):

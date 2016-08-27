@@ -3,7 +3,7 @@
 import sys
 exec(open('tbvaccine/version.py').read())
 assert sys.version >= '2.6', "Requires Python v2.6 or above."
-from setuptools import setup
+from setuptools import setup  # noqa
 
 classifiers = [
     "License :: OSI Approved :: MIT License",
