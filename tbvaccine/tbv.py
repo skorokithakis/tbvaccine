@@ -1,6 +1,5 @@
-#!/usr/bin/env python3
-
 import os
+import sys
 import traceback
 import re
 from enum import Enum
@@ -54,7 +53,11 @@ class TBVaccine:
         self._buffer += text
 
     def _file_in_dir(self):
-        return self._file.startswith(self._code_dir)
+        """
+        Decide whether the file in the traceback is one in our code_dir or not.
+        """
+        return self._file.startswith(self._code_dir) or \
+               not self._file.startswith("/")
 
     def _process_code_line(self, line):
         """
@@ -68,7 +71,7 @@ class TBVaccine:
                 line = line[1:]
                 self._print(">", fg="red", style="bright")
             line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
-            self._print(line)
+            self._print(line.rstrip("\r\n"))
 
     def _process_file_line(self, line):
         """
@@ -87,29 +90,36 @@ class TBVaccine:
             self._print(match["line"], "yellow")
             self._print(", in ")
             self._print(match["func"], "magenta")
-            self._print("\n")
 
     def process_line(self, line):
         """
         Process a line of input.
         """
-        sl = line.strip()
+        sl = line.rstrip("\r\n")
+        if not sl:
+            return ""
+
         if self._state == State.no_idea and sl == "Traceback (most recent call last):":
+            # The first line of the traceback.
             self._state = State.in_traceback
-            self._print(line, "blue")
+            self._print(sl, "blue")
         elif self._state == State.in_traceback and self.TB_END_RE.match(sl):
+            # The last line of the traceback.
             self._state = State.no_idea
             matches = self.TB_END_RE.match(sl).groupdict()
             self._print(matches["exception"], "red", "bright")
             self._print(": ")
             self._print(matches["description"], "green")
-            self._print("\n")
         elif self._state == State.in_traceback and self.TB_FILE_RE.match(line):
-            self._process_file_line(line)
-        elif self._state == State.in_traceback and line.startswith("    "):
-            self._process_code_line(line)
+            # A file line.
+            self._process_file_line(sl)
+        elif self._state == State.in_traceback and sl.startswith("    "):
+            # A code line.
+            self._process_code_line(sl)
         else:
-            self._print(line)
+            self._print(sl)
+
+        self._print("\n")
 
         output = self._buffer
         self._buffer = ""
@@ -119,10 +129,26 @@ class TBVaccine:
         """
         Format an entire traceback with ANSI colors.
         """
-        return "\n".join(self.process_line(line) for line in tb.split("\n"))
+        return "".join(self.process_line(line) for line in tb.split("\n"))
+
+    def print_exception(self, etype, value, tb):
+        """
+        Format and colorize a stack trace and the exception information.
+        """
+        tb_text = "".join(traceback.format_exception(etype, value, tb))
+        formatted = self.format_tb(tb_text)
+        sys.stderr.write(formatted)
 
     def format_exc(self):
         """
         Format the latest exception's traceback.
         """
         return self.format_tb(traceback.format_exc())
+
+
+def add_hook():
+    if not getattr(sys.stderr, 'isatty', lambda: False)():
+        sys.stderr.write("no tty")
+        return
+    tbv = TBVaccine()
+    sys.excepthook = tbv.print_exception

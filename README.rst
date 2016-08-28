@@ -56,4 +56,22 @@ To use it in an ``except`` block::
     except:
         print(TBVaccine().format_exc())
 
-I'll tell you about the other ways later.
+
+To make it the default way of printing tracebacks, use ``add_hook()``::
+
+    import tbvaccine
+    tbvaccine.add_hook()
+
+    1 / 0
+
+Bam! Instant pretty tracebacks.
+
+
+Epilogue
+========
+
+This library is still pretty new, please contribute patches if something doesn't
+work as intended, and also please tell your friends about it! Hopefully one day
+it will be implemented in the Python interpreters themselves.
+
+-- Stavros

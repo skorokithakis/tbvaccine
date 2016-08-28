@@ -2,7 +2,7 @@ import argparse
 import sys
 
 from tbvaccine import __version__
-from tbvaccine.tbvaccine import TBVaccine
+from tbvaccine import TBVaccine
 
 
 def main():
@@ -27,7 +27,7 @@ def main():
 
     for line in iter(sys.stdin.readline, ''):
         output = tbv.process_line(line)
-        sys.stdout.write(output)
+        sys.stderr.write(output)
 
 
 if __name__ == "__main__":
