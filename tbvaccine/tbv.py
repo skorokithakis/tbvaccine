@@ -15,7 +15,7 @@ class State(Enum):
 
 
 class TBVaccine:
-    TB_END_RE = re.compile(r'^(?P<exception>\w+)\: (?P<description>.*?)$')
+    TB_END_RE = re.compile(r'^(?P<exception>[\w\.]+)\: (?P<description>.*?)$')
     TB_FILE_RE = re.compile(r'^  File "(?P<filename>.*?)", line (?P<line>\d+), in (?P<func>.*)$')
 
     def __init__(self, code_dir=None, isolate=True):
