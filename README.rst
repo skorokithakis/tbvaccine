@@ -3,9 +3,16 @@ TBVaccine
 
 TBVaccine is a utility that pretty-prints Python tracebacks. It automatically
 highlights lines you care about and deemphasizes lines you don't, and colorizes
-the various elements in a traceback to make it easier to parse, like so:
+the various elements in a traceback to make it easier to parse.
 
-.. image:: misc/screenshot.png
+Here are some screenshots. This is the before:
+
+.. image:: misc/before.png
+
+And this is the after:
+
+.. image:: misc/after.png
+
 
 Installation
 ============
