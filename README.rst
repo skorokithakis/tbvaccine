@@ -27,8 +27,11 @@ You are done!
 Usage as a command-line utility
 ===============================
 
-TBVaccine can be used from the command line. Just pipe STDERR into it from the
-program you want to watch::
+TBVaccine can be used from the command line several ways.::
+
+    python -m tbvaccine myscript.py
+
+Or just pipe STDERR into it from the program you want to watch::
 
     ./myscript.py 2>&1 | tbvaccine
 
