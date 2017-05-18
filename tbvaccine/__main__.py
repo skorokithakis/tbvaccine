@@ -65,3 +65,4 @@ with open(script_path) as script_file:
     code = compile(script_file.read(), script_path, 'exec')
     variables = {}
     exec(code, variables, variables)
+
