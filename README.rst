@@ -67,6 +67,9 @@ directory, as returned by ``os.getcwd()`` will be used.
 If ``isolate`` is ``False``, all lines are colorized, and ``code_dir`` is
 ignored.
 
+If ``show_vars`` is ``False``, variables will not be printed in each stack
+frame.
+
 To use it in an ``except`` block::
 
     from tbvaccine import TBVaccine
@@ -76,10 +79,11 @@ To use it in an ``except`` block::
         print(TBVaccine().format_exc())
 
 
-To make it the default way of printing tracebacks, use ``add_hook()``::
+To make it the default way of printing tracebacks, use ``add_hook()`` (which
+also accepts any argument the ``TBVaccine`` class does)::
 
     import tbvaccine
-    tbvaccine.add_hook()
+    tbvaccine.add_hook(isolate=False)
 
     1 / 0
 

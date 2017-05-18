@@ -68,7 +68,7 @@ class TBVaccine:
         """
         Process a line of variables in the traceback.
         """
-        if self._show_vars and self._isolate and not self._file_in_dir():
+        if self._show_vars is False or (self._isolate and not self._file_in_dir()):
             # Don't print.
             return False
         else:
@@ -197,10 +197,10 @@ class TBVaccine:
         return self._format_tb_string_with_locals(*sys.exc_info())
 
 
-def add_hook():
+def add_hook(*args, **kwargs):
     if not getattr(sys.stderr, 'isatty', lambda: False)():
         sys.stderr.write("\n\nNot an interactive session, "
                          "TBVaccine won't pretty print exceptions.\n\n")
         return
-    tbv = TBVaccine()
+    tbv = TBVaccine(*args, **kwargs)
     sys.excepthook = tbv.print_exception
