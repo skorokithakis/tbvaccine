@@ -170,6 +170,10 @@ class TBVaccine:
             # Frame lines contain newlines, so we need to split on them.
             lines.extend(line.split("\n"))
             var_tuples = sorted(frame.f_locals.items())
+            if not var_tuples:
+                # There are no locals, so continue.
+                continue
+
             max_length = max([len(x[0]) for x in var_tuples])
             for key, val in var_tuples:
                 try:
