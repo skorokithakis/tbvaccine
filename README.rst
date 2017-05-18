@@ -13,6 +13,15 @@ And this is the after:
 
 .. image:: misc/after.png
 
+If you add the hook or call TBVaccine in your code, it can also print all
+variables in each stack frame. That is, it turns this:
+
+.. image:: misc/before-vars.png
+
+into this:
+
+.. image:: misc/after-vars.png
+
 
 Installation
 ============

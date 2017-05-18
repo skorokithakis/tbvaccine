@@ -17,14 +17,16 @@ class State(Enum):
 class TBVaccine:
     TB_END_RE = re.compile(r'^(?P<exception>[\w\.]+)\: (?P<description>.*?)$')
     TB_FILE_RE = re.compile(r'^  File "(?P<filename>.*?)", line (?P<line>\d+), in (?P<func>.*)$')
+    VAR_PREFIX = "|     "
 
-    def __init__(self, code_dir=None, isolate=True):
+    def __init__(self, code_dir=None, isolate=True, show_vars=True):
         # The directory we're interested in.
         if not code_dir:
             code_dir = os.getcwd()
         self._code_dir = code_dir
 
-        # Whether to print interesting lines in color or not.
+        # Whether to print interesting lines in color or not. If False,
+        # all lines are printed in color.
         self._isolate = isolate
 
         # Our current state.
@@ -35,6 +37,9 @@ class TBVaccine:
 
         # The buffer that we use to build up the output in.
         self._buffer = ""
+
+        # Whether to print variables for stack frames.
+        self._show_vars = show_vars
 
     def _print(self, text, fg=None, style=None):
         if fg or style:
@@ -57,7 +62,19 @@ class TBVaccine:
         Decide whether the file in the traceback is one in our code_dir or not.
         """
         return self._file.startswith(self._code_dir) or \
-               not self._file.startswith("/")
+            not self._file.startswith("/")
+
+    def _process_var_line(self, line):
+        """
+        Process a line of variables in the traceback.
+        """
+        if self._show_vars and self._isolate and not self._file_in_dir():
+            # Don't print.
+            return False
+        else:
+            line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
+            self._print(line.rstrip("\r\n"))
+        return True
 
     def _process_code_line(self, line):
         """
@@ -91,7 +108,7 @@ class TBVaccine:
             self._print(", in ")
             self._print(match["func"], "magenta")
 
-    def process_line(self, line):
+    def _process_line(self, line):
         """
         Process a line of input.
         """
@@ -113,6 +130,9 @@ class TBVaccine:
         elif self._state == State.in_traceback and self.TB_FILE_RE.match(line):
             # A file line.
             self._process_file_line(sl)
+        elif self._state == State.in_traceback and sl.startswith(self.VAR_PREFIX):
+            if not self._process_var_line(sl):
+                return ""
         elif self._state == State.in_traceback and sl.startswith("    "):
             # A code line.
             self._process_code_line(sl)
@@ -125,25 +145,56 @@ class TBVaccine:
         self._buffer = ""
         return output
 
-    def format_tb(self, tb):
+    def _format_tb_string_with_locals(self, etype, value, tb):
         """
-        Format an entire traceback with ANSI colors.
+        Return a traceback as a string, with the local variables in each stack.
         """
-        return "".join(self.process_line(line) for line in tb.split("\n"))
+        original_tb = tb
+        while 1:
+            if not tb.tb_next:
+                break
+            tb = tb.tb_next
+
+        stack = []
+        f = tb.tb_frame
+        while f:
+            stack.append(f)
+            f = f.f_back
+        stack.reverse()
+
+        lines = ["Traceback (most recent call last):\n"]
+        for frame, line in zip(stack, traceback.format_tb(original_tb)):
+            # Frame lines contain newlines, so we need to split on them.
+            lines.extend(line.split("\n"))
+            var_tuples = sorted(frame.f_locals.items())
+            max_length = max([len(x[0]) for x in var_tuples])
+            for key, val in var_tuples:
+                try:
+                    val = str(val)
+                except:
+                    val = "<CANNOT CONVERT VALUE>"
+                lines.append("%s%s = %s" % (self.VAR_PREFIX, key.ljust(max_length), val))
+        lines.append("%s: %s" % (value.__class__.__name__, value))
+        return "".join(self._process_line(line) for line in lines)
+
+    def _format_tb_string(self, tb_string):
+        """
+        Format an entire traceback string with ANSI colors.
+        """
+        return "".join(self._process_line(line) for line in tb_string.split("\n"))
 
     def print_exception(self, etype, value, tb):
         """
         Format and colorize a stack trace and the exception information.
         """
-        tb_text = "".join(traceback.format_exception(etype, value, tb))
-        formatted = self.format_tb(tb_text)
+        formatted = self._format_tb_string_with_locals(etype, value, tb)
         sys.stderr.write(formatted)
 
     def format_exc(self):
         """
         Format the latest exception's traceback.
         """
-        return self.format_tb(traceback.format_exc())
+        return self._format_tb_string_with_locals(*sys.exc_info())
 
 
 def add_hook():
