@@ -102,7 +102,10 @@ class TBVaccine:
             self._print(line)
         else:
             self._print("  File \"")
-            self._print(match["filename"], "cyan")
+            base, fn = os.path.split(match["filename"])
+            if base:
+                self._print(base + os.sep, "cyan")
+            self._print(fn, "cyan", style="bright")
             self._print("\", line ")
             self._print(match["line"], "yellow")
             self._print(", in ")
