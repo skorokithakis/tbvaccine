@@ -21,6 +21,8 @@ del sys.argv[0]
 
 with open(script_path) as script_file:
     code = compile(script_file.read(), script_path, 'exec')
-    variables = {}
+    variables = {
+        '__name__': '__main__'
+    }
     exec(code, variables, variables)
 
