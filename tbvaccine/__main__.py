@@ -59,8 +59,7 @@ def initialize():
     return True
 
 with open(script_path) as script_file:
-    if not initialize():
-        pass # TODO: better not add colors then
+    initialize()
 
     code = compile(script_file.read(), script_path, 'exec')
     variables = {
