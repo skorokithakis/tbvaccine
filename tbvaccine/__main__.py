@@ -63,6 +63,8 @@ with open(script_path) as script_file:
         pass # TODO: better not add colors then
 
     code = compile(script_file.read(), script_path, 'exec')
-    variables = {}
+    variables = {
+        '__name__': '__main__'
+    }
     exec(code, variables, variables)
 
