@@ -26,7 +26,7 @@ def main():
     )
 
     for line in iter(sys.stdin.readline, ''):
-        output = tbv.process_line(line)
+        output = tbv._process_line(line)
         sys.stderr.write(output)
 
 
