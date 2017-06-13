@@ -9,6 +9,10 @@ from pygments.lexers import PythonLexer
 from pygments.formatters import Terminal256Formatter as TerminalFormatter
 
 
+#  term colour control codes
+re_ansi_control_codes = re.compile(r'\x1b[^m]*m')
+
+
 class State(Enum):
     no_idea = 0
     in_traceback = 1
@@ -19,7 +23,7 @@ class TBVaccine:
     TB_FILE_RE = re.compile(r'^  File "(?P<filename>.*?)", line (?P<line>\d+), in (?P<func>.*)$')
     VAR_PREFIX = "|     "
 
-    def __init__(self, code_dir=None, isolate=True, show_vars=True):
+    def __init__(self, code_dir=None, isolate=True, show_vars=True, max_length=79*4):
         # The directory we're interested in.
         if not code_dir:
             code_dir = os.getcwd()
@@ -41,7 +45,15 @@ class TBVaccine:
         # Whether to print variables for stack frames.
         self._show_vars = show_vars
 
-    def _print(self, text, fg=None, style=None):
+        # Max length of printed variable lines
+        self._max_length = max_length
+
+    def _print(self, text, fg=None, style=None, max_length=None):
+        if max_length and len(text) > max_length:
+            # drop all ANSI control sequences
+            text = re.sub(re_ansi_control_codes, "", text)
+            if len(text) > max_length:
+                text = text[:max_length] + " ... ({} more chars)".format(len(text) - max_length)
         if fg or style:
             styles = {"bright": 1, None: 0}
             colors = {
@@ -73,7 +85,7 @@ class TBVaccine:
             return False
         else:
             line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
-            self._print(line.rstrip("\r\n"))
+            self._print(line.rstrip("\r\n"), max_length=self._max_length)
         return True
 
     def _process_code_line(self, line):
