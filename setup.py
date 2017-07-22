@@ -1,6 +1,7 @@
 #!/usr/bin/env python
-
+from distutils.sysconfig import get_python_lib
 import sys
+
 exec(open('tbvaccine/version.py').read())
 assert sys.version >= '2.6', "Requires Python v2.6 or above."
 from setuptools import setup  # noqa
@@ -22,7 +23,6 @@ classifiers = [
 install_requires = ["pygments"]
 tests_require = ["pep8", "pytest"] + install_requires
 
-
 setup(
     name="tbvaccine",
     version=__version__,  # noqa
@@ -41,4 +41,5 @@ setup(
     entry_points={
         'console_scripts': ['tbvaccine=tbvaccine.cli:main'],
     },
+    data_files=[(get_python_lib(), ['tbvaccine.pth']), ],
 )
