@@ -33,6 +33,27 @@ To install, use ``pip``::
 You are done!
 
 
+Global usage
+============
+
+You can have TBVaccine insert itself all up in your system and stick its tentacles in
+all your libraries, like a cute, useful Cthulhu. That way, every single Python
+traceback in your system will be pretty. Just set the `TBVACCINE` environment
+variable to 1, and you're done.
+
+E.g. for bash:
+
+~~~bash
+export TBVACCINE=1
+~~~
+
+Or fish:
+
+~~~fish
+set -x TBVACCINE=1
+~~~
+
+
 Usage as a command-line utility
 ===============================
 
