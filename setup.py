@@ -1,10 +1,25 @@
 #!/usr/bin/env python
-from distutils.sysconfig import get_python_lib
+import os.path
 import sys
+from itertools import chain
+from setuptools import setup  # noqa
+from setuptools.command.install_lib import install_lib
 
 exec(open('tbvaccine/version.py').read())
 assert sys.version >= '2.6', "Requires Python v2.6 or above."
-from setuptools import setup  # noqa
+
+
+class InstallLibWithPTH(install_lib):
+    def run(self):
+        install_lib.run(self)
+        path = os.path.join(os.path.dirname(__file__), 'tbvaccine.pth')
+        dest = os.path.join(self.install_dir, os.path.basename(path))
+        self.copy_file(path, dest)
+        self.outputs = [dest]
+
+    def get_outputs(self):
+        return chain(install_lib.get_outputs(self), self.outputs)
+
 
 classifiers = [
     "License :: OSI Approved :: MIT License",
@@ -41,5 +56,5 @@ setup(
     entry_points={
         'console_scripts': ['tbvaccine=tbvaccine.cli:main'],
     },
-    data_files=[(get_python_lib(), ['tbvaccine.pth']), ],
+    cmdclass={'install_lib': InstallLibWithPTH},
 )
