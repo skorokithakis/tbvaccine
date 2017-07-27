@@ -5,7 +5,7 @@ import re
 from enum import Enum
 
 from pygments import highlight
-from pygments.lexers import PythonLexer
+from pygments.lexers import Python3TracebackLexer, PythonTracebackLexer
 from pygments.formatters import Terminal256Formatter as TerminalFormatter
 
 
@@ -84,7 +84,6 @@ class TBVaccine:
             # Don't print.
             return False
         else:
-            line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
             self._print(line.rstrip("\r\n"), max_length=self._max_length)
         return True
 
@@ -99,7 +98,9 @@ class TBVaccine:
             if self._isolate:
                 line = line[1:]
                 self._print(">", fg="red", style="bright")
-            line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
+            lexer = (Python3TracebackLexer if sys.version_info >= (3,)
+                     else PythonTracebackLexer)()
+            line = highlight(line, lexer, TerminalFormatter(style="monokai"))
             self._print(line.rstrip("\r\n"))
 
     def _process_file_line(self, line):
