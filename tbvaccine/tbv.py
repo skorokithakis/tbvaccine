@@ -10,7 +10,7 @@ from pygments.formatters import Terminal256Formatter as TerminalFormatter
 
 
 #  term colour control codes
-re_ansi_control_codes = re.compile(r'\x1b[^m]*m')
+re_ansi_control_codes = re.compile(r"\x1b[^m]*m")
 
 
 class State(Enum):
@@ -19,11 +19,11 @@ class State(Enum):
 
 
 class TBVaccine:
-    TB_END_RE = re.compile(r'^(?P<exception>[\w\.]+)\: (?P<description>.*?)$')
+    TB_END_RE = re.compile(r"^(?P<exception>[\w\.]+)\: (?P<description>.*?)$")
     TB_FILE_RE = re.compile(r'^  File "(?P<filename>.*?)", line (?P<line>\d+), in (?P<func>.*)$')
     VAR_PREFIX = "|     "
 
-    def __init__(self, code_dir=None, isolate=True, show_vars=True, max_length=79*4):
+    def __init__(self, code_dir=None, isolate=True, show_vars=True, max_length=79 * 4):
         # The directory we're interested in.
         if not code_dir:
             code_dir = os.getcwd()
@@ -73,8 +73,7 @@ class TBVaccine:
         """
         Decide whether the file in the traceback is one in our code_dir or not.
         """
-        return self._file.startswith(self._code_dir) or \
-            not self._file.startswith("/")
+        return self._file.startswith(self._code_dir) or not self._file.startswith("/")
 
     def _process_var_line(self, line):
         """
@@ -113,12 +112,12 @@ class TBVaccine:
             # Print without colors.
             self._print(line)
         else:
-            self._print("  File \"")
+            self._print('  File "')
             base, fn = os.path.split(match["filename"])
             if base:
                 self._print(base + os.sep, "cyan")
             self._print(fn, "cyan", style="bright")
-            self._print("\", line ")
+            self._print('", line ')
             self._print(match["line"], "yellow")
             self._print(", in ")
             self._print(match["func"], "magenta")
@@ -166,6 +165,7 @@ class TBVaccine:
         """
         original_tb = tb
         while 1:
+            traceback.print_tb(tb)
             if not tb.tb_next:
                 break
             tb = tb.tb_next
@@ -217,9 +217,8 @@ class TBVaccine:
 
 
 def add_hook(*args, **kwargs):
-    if not getattr(sys.stderr, 'isatty', lambda: False)():
-        sys.stderr.write("\n\nNot an interactive session, "
-                         "TBVaccine won't pretty print exceptions.\n\n")
+    if not getattr(sys.stderr, "isatty", lambda: False)():
+        sys.stderr.write("\n\nNot an interactive session, " "TBVaccine won't pretty print exceptions.\n\n")
         return
     tbv = TBVaccine(*args, **kwargs)
     sys.excepthook = tbv.print_exception
