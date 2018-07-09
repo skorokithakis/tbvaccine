@@ -107,6 +107,20 @@ also accepts any argument the ``TBVaccine`` class does)::
 Bam! Instant pretty tracebacks.
 
 
+Logging integration
+===================
+
+You can integrate TBVaccine with logging like so::
+
+    class TbVaccineFormatter(logging.Formatter):
+        def  formatException(self, exc_info):
+            return TBVaccine(isolate=True).format_exc()
+
+    sh = logging.StreamHandler()
+    sh.setFormatter(TbVaccineFormatter('[%(levelname)s] %(asctime)s : %(message)s', '%Y-%m-%d %H:%M:%S'))
+    logger.addHandler(sh)
+
+
 Epilogue
 ========
 
