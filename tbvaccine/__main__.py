@@ -1,5 +1,6 @@
 import os
 import sys
+
 import tbvaccine
 
 tbvaccine.add_hook()
@@ -19,8 +20,9 @@ sys.path[0] = os.path.dirname(script_path)
 # Remove tbvaccine from the arg list.
 del sys.argv[0]
 
+
 def initialize():
-    if sys.platform.startswith('win32'):
+    if sys.platform.startswith("win32"):
 
         # Only windows requires this
         import ctypes
@@ -58,12 +60,10 @@ def initialize():
     # Successful initialization
     return True
 
+
 with open(script_path) as script_file:
     initialize()
 
-    code = compile(script_file.read(), script_path, 'exec')
-    variables = {
-        '__name__': '__main__'
-    }
+    code = compile(script_file.read(), script_path, "exec")
+    variables = {"__name__": "__main__"}
     exec(code, variables, variables)
-

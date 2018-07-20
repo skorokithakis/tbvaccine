@@ -1,13 +1,12 @@
 import os
+import re
 import sys
 import traceback
-import re
 from enum import Enum
 
 from pygments import highlight
-from pygments.lexers import PythonLexer
 from pygments.formatters import Terminal256Formatter as TerminalFormatter
-
+from pygments.lexers import PythonLexer
 
 #  term colour control codes
 re_ansi_control_codes = re.compile(r"\x1b[^m]*m")
@@ -73,8 +72,7 @@ class TBVaccine:
         """
         Decide whether the file in the traceback is one in our code_dir or not.
         """
-        return (self._file.startswith(self._code_dir) or
-                (sys.platform != 'win32' and not self._file.startswith("/")))
+        return self._file.startswith(self._code_dir) or (sys.platform != "win32" and not self._file.startswith("/"))
 
     def _process_var_line(self, line):
         """
@@ -191,7 +189,7 @@ class TBVaccine:
             for key, val in var_tuples:
                 try:
                     val = str(val)
-                except:
+                except:  # noqa
                     val = "<CANNOT CONVERT VALUE>"
                 lines.append("%s%s = %s" % (self.VAR_PREFIX, key.ljust(max_length), val))
         lines.append("%s: %s" % (value.__class__.__name__, value))
