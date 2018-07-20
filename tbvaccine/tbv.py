@@ -73,7 +73,8 @@ class TBVaccine:
         """
         Decide whether the file in the traceback is one in our code_dir or not.
         """
-        return self._file.startswith(self._code_dir) or not self._file.startswith("/")
+        return (self._file.startswith(self._code_dir) or
+                (sys.platform != 'win32' and not self._file.startswith("/")))
 
     def _process_var_line(self, line):
         """
