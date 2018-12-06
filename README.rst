@@ -1,7 +1,7 @@
 TBVaccine
 ---------
 
-.. image:: https://www.codeshelter.co/static/badges/badge-flat.9d2ebf69a537.svg
+.. image:: https://www.codeshelter.co/static/badges/badge-flat.svg
     :target: www.codeshelter.co
 .. image:: https://img.shields.io/badge/code%20style-black-000000.svg
     :target: https://github.com/ambv/black
