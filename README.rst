@@ -1,8 +1,10 @@
 TBVaccine
 ---------
 
-.. image:: https://www.codeshelter.co/static/badges/badge-plastic.9800c3f706ba.svg
+.. image:: https://www.codeshelter.co/static/badges/badge-flat.svg
     :target: www.codeshelter.co
+.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
+    :target: https://github.com/ambv/black
 
 TBVaccine is a utility that pretty-prints Python tracebacks. It automatically
 highlights lines you care about and deemphasizes lines you don't, and colorizes
