@@ -220,7 +220,6 @@ class TBVaccine:
 
 def add_hook(*args, **kwargs):
     if not getattr(sys.stderr, "isatty", lambda: False)():
-        sys.stderr.write("\n\nNot an interactive session, " "TBVaccine won't pretty print exceptions.\n\n")
         return
     tbv = TBVaccine(*args, **kwargs)
     sys.excepthook = tbv.print_exception
