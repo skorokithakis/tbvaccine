@@ -55,6 +55,12 @@ Or fish::
     set -x TBVACCINE=1
 
 
+NOTE: If you're on Ubuntu, you most likely have Apport installed, which overrides
+TBVaccine's hook with its own. To disable Apport for Python, delete a file named
+``/etc/python<version>/sitecustomize.py``. Note that this will disable Apport for
+Python, duh.
+
+
 Usage as a command-line utility
 ===============================
 
