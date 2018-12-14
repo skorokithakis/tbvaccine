@@ -21,7 +21,7 @@ class TBVaccine:
     TB_FILE_RE = re.compile(r'^  File "(?P<filename>.*?)", line (?P<line>\d+), in (?P<func>.*)$')
     VAR_PREFIX = "|     "
 
-    def __init__(self, code_dir=None, isolate=True, show_vars=True, max_length=79 * 4):
+    def __init__(self, code_dir=None, isolate=True, show_vars=True, max_length=120):
         # The directory we're interested in.
         if not code_dir:
             code_dir = os.getcwd()
@@ -47,11 +47,13 @@ class TBVaccine:
         self._max_length = max_length
 
     def _print(self, text, fg=None, style=None, max_length=None):
-        if max_length and len(text) > max_length:
-            # drop all ANSI control sequences
-            text = re.sub(re_ansi_control_codes, "", text)
-            if len(text) > max_length:
-                text = text[:max_length] + " ... ({} more chars)".format(len(text) - max_length)
+        raw_text = re.sub(re_ansi_control_codes, "", text)
+        if max_length and len(raw_text) > max_length:
+            short_text = text[: int(max_length * 3)]
+            # Check if there's an ANSI escape in the last few chars of max_length and break before it.
+            if "\x1b" in short_text[-10:]:
+                short_text = short_text[: short_text.rfind("\x1b")]
+            text = short_text + "\x1b[0m ... ({} more chars)".format(len(text) - len(short_text))
         if fg or style:
             styles = {"bright": 1, None: 0}
             colors = {
@@ -185,6 +187,9 @@ class TBVaccine:
 
             max_length = max([len(x[0]) for x in var_tuples])
             for key, val in var_tuples:
+                if type(val) in [type(sys.exit), type(sys)] or (key.startswith("__") and key.endswith("__")):
+                    # We don't want to print functions or modules or __variables__.
+                    continue
                 try:
                     val = str(val)
                 except:  # noqa
