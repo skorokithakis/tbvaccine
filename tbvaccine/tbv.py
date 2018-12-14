@@ -187,7 +187,7 @@ class TBVaccine:
 
             max_length = max([len(x[0]) for x in var_tuples])
             for key, val in var_tuples:
-                if type(val) in [type(sys.exit), type(sys)] or (key.startswith("__") and key.endswith("__")):
+                if type(val) in (type(lambda: None), type(sys)) or (key.startswith("__") and key.endswith("__")):
                     # We don't want to print functions or modules or __variables__.
                     continue
                 try:
