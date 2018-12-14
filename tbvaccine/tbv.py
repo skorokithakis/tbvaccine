@@ -163,8 +163,7 @@ class TBVaccine:
         Return a traceback as a string, with the local variables in each stack.
         """
         original_tb = tb
-        while 1:
-            traceback.print_tb(tb)
+        while True:
             if not tb.tb_next:
                 break
             tb = tb.tb_next
