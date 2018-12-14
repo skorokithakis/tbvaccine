@@ -2,7 +2,6 @@ import os
 import re
 import sys
 import traceback
-from enum import Enum
 
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter as TerminalFormatter
@@ -12,7 +11,7 @@ from pygments.lexers import PythonLexer
 re_ansi_control_codes = re.compile(r"\x1b[^m]*m")
 
 
-class State(Enum):
+class State:
     no_idea = 0
     in_traceback = 1
 
