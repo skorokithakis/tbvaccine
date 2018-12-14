@@ -5,7 +5,7 @@ from tbvaccine import TBVaccine, __version__
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Upload a file to Pastery, the " " best pastebin in the world.")
+    parser = argparse.ArgumentParser(description="Pretty-print tracebacks")
     parser.add_argument(
         "-d",
         "--dir",
