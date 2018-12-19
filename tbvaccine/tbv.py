@@ -1,4 +1,8 @@
-import configparser
+try:
+    from configparser import ConfigParser
+except ImportError:
+    from ConfigParser import ConfigParser
+
 import os
 import re
 import sys
@@ -60,12 +64,12 @@ class TBVaccine:
 
         if not os.path.exists(config_path):
             with open(config_path, "w") as configfile:
-                config = configparser.ConfigParser()
+                config = ConfigParser()
                 config.add_section("style")
                 config.set("style", "color_scheme", "monokai")
                 config.write(configfile)
 
-        self._config = configparser.ConfigParser()
+        self._config = ConfigParser()
         self._config.read(config_path)
 
     def _print(self, text, fg=None, style=None, max_length=None):
