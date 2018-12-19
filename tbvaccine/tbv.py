@@ -1,8 +1,10 @@
+import configparser
 import os
 import re
 import sys
 import traceback
 
+from appdirs import user_config_dir
 from pygments import highlight
 from pygments.formatters import Terminal256Formatter as TerminalFormatter
 from pygments.lexers import PythonLexer
@@ -46,6 +48,26 @@ class TBVaccine:
         # Max length of printed variable lines
         self._max_length = max_length
 
+        self._load_config()
+
+    def _load_config(self):
+        dir_path = user_config_dir("tbvaccine")
+        config_path = os.path.join(dir_path, "tbvaccine.cfg")
+        try:
+            os.mkdir(dir_path)
+        except OSError:
+            pass
+
+        if not os.path.exists(config_path):
+            with open(config_path, "w") as configfile:
+                config = configparser.ConfigParser()
+                config.add_section("style")
+                config.set("style", "color_scheme", "monokai")
+                config.write(configfile)
+
+        self._config = configparser.ConfigParser()
+        self._config.read(config_path)
+
     def _print(self, text, fg=None, style=None, max_length=None):
         raw_text = re.sub(re_ansi_control_codes, "", text)
         if max_length and len(raw_text) > max_length:
@@ -83,7 +105,7 @@ class TBVaccine:
             # Don't print.
             return False
         else:
-            line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
+            line = highlight(line, PythonLexer(), TerminalFormatter(style=self._config.get("style", "color_scheme")))
             self._print(line.rstrip("\r\n"), max_length=self._max_length)
         return True
 

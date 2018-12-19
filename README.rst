@@ -132,6 +132,14 @@ You can integrate TBVaccine with logging like so::
     logger.addHandler(sh)
 
 
+Configuration
+=============
+
+To configure TBVaccine, open its configuration file in ``~/.config/tbvaccine/tbvaccine.cfg`` (or your
+operating system's equivalent) and edit it. You can currently configure the color style there by
+specifying one of the `Pygments styles <http://pygments.org/demo/6778888/?style=monokai>`.
+
+
 Epilogue
 ========
 

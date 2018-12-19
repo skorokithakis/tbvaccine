@@ -37,7 +37,7 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-install_requires = ["pygments"]
+install_requires = ["pygments", "appdirs"]
 tests_require = ["pep8", "pytest"] + install_requires
 
 setup(
