@@ -53,7 +53,7 @@ class TBVaccine:
         self._max_length = max_length
 
         self._load_config()
-        
+
         self.pygments_lexer = PythonLexer()
         self.pygments_formatter = TerminalFormatter(style=self._config.get("style", "color_scheme"))
 
@@ -100,8 +100,8 @@ class TBVaccine:
 
     def _highlight_line(self, line):
         line = highlight(line, self.pygments_lexer, self.pygments_formatter)
-        return line.rstrip("\r\n")        
-        
+        return line.rstrip("\r\n")
+
     def _file_in_dir(self):
         """
         Decide whether the file in the traceback is one in our code_dir or not.
