@@ -53,6 +53,9 @@ class TBVaccine:
         self._max_length = max_length
 
         self._load_config()
+        
+        self.pygments_lexer = PythonLexer()
+        self.pygments_formatter = TerminalFormatter(style=self._config.get("style", "color_scheme"))
 
     def _load_config(self):
         dir_path = user_config_dir("tbvaccine")
@@ -95,6 +98,10 @@ class TBVaccine:
             text = "\x1b[%d;%dm%s\x1b[m" % (styles[style], colors[fg], text)
         self._buffer += text
 
+    def _highlight_line(self, line):
+        line = highlight(line, self.pygments_lexer, self.pygments_formatter)
+        return line.rstrip("\r\n")        
+        
     def _file_in_dir(self):
         """
         Decide whether the file in the traceback is one in our code_dir or not.
@@ -109,8 +116,8 @@ class TBVaccine:
             # Don't print.
             return False
         else:
-            line = highlight(line, PythonLexer(), TerminalFormatter(style=self._config.get("style", "color_scheme")))
-            self._print(line.rstrip("\r\n"), max_length=self._max_length)
+            line = self._highlight_line(line)
+            self._print(line, max_length=self._max_length)
         return True
 
     def _process_code_line(self, line):
@@ -124,8 +131,8 @@ class TBVaccine:
             if self._isolate:
                 line = line[1:]
                 self._print(">", fg="red", style="bright")
-            line = highlight(line, PythonLexer(), TerminalFormatter(style="monokai"))
-            self._print(line.rstrip("\r\n"))
+            line = self._highlight_line(line)
+            self._print(line)
 
     def _process_file_line(self, line):
         """
