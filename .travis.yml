@@ -7,5 +7,5 @@ python:
   - "3.6"
 install: pip install pre-commit
 script:
-  - pre-commit run -a
+  - if [[ $TRAVIS_PYTHON_VERSION == '3.6'* ]]; then pre-commit run -a; fi
   - python setup.py test
