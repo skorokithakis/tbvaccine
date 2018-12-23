@@ -1,7 +1,7 @@
 try:
     from configparser import ConfigParser
 except ImportError:
-    from ConfigParser import ConfigParser
+    from ConfigParser import ConfigParser  # type: ignore
 
 import os
 import re
