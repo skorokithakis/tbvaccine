@@ -60,10 +60,7 @@ class TBVaccine:
     def _load_config(self):
         dir_path = user_config_dir("tbvaccine")
         config_path = os.path.join(dir_path, "tbvaccine.cfg")
-        try:
-            os.mkdir(dir_path)
-        except OSError:
-            pass
+        os.makedirs(dir_path, exist_ok=True)
 
         if not os.path.exists(config_path):
             with open(config_path, "w") as configfile:
