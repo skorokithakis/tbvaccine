@@ -58,7 +58,8 @@ Or fish::
 NOTE: If you're on Ubuntu, you most likely have Apport installed, which overrides
 TBVaccine's hook with its own. To disable Apport for Python, delete a file named
 ``/etc/python<version>/sitecustomize.py``. Note that this will disable Apport for
-Python, duh.
+Python, and you won't be asked to submit info to Ubuntu when Python programs crash
+any more. For some, this is a good thing.
 
 
 Usage as a command-line utility
