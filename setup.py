@@ -37,8 +37,11 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-install_requires = ["pygments", "appdirs"]
-tests_require = ["pep8", "pytest"] + install_requires
+INSTALL_REQUIRES install_requires = ["pygments", "appdirs"]
+TESTS_REQUIRES = ["pep8", "pytest"] + INSTALL_REQUIRES
+EXTRA_REQUIRES = {
+    ":sys_platform == 'win32'" : ["colorama>=0.2.5"],
+}
 
 setup(
     name="tbvaccine",
@@ -51,8 +54,9 @@ setup(
     license="MIT",
     classifiers=classifiers,
     packages=["tbvaccine"],
-    install_requires=install_requires,
-    tests_require=tests_require,
+    install_requires=INSTALL_REQUIRES,
+    extras_require=EXTRA_REQUIRES,
+    tests_require=TESTS_REQUIRES,
     test_suite="tbvaccine.tests",
     entry_points={"console_scripts": ["tbvaccine=tbvaccine.cli:main"]},
     cmdclass={"install_lib": InstallLibWithPTH},
