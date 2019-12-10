@@ -39,9 +39,7 @@ classifiers = [
 
 INSTALL_REQUIRES = ["pygments", "appdirs"]
 TESTS_REQUIRE = ["pep8", "pytest"] + INSTALL_REQUIRES
-EXTRAS_REQUIRE = {
-    ":sys_platform == 'win32'" : ["colorama>=0.2.5"],
-}
+EXTRAS_REQUIRE = {":sys_platform == 'win32'": ["colorama>=0.2.5"]}
 
 setup(
     name="tbvaccine",
