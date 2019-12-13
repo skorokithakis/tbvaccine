@@ -249,7 +249,7 @@ class TBVaccine:
 
 
 def add_hook(*args, **kwargs):
-    if not getattr(sys.stderr, "isatty", lambda: False)():
+    if not sys.stderr.isatty():
         return
     tbv = TBVaccine(*args, **kwargs)
     sys.excepthook = tbv.print_exception
