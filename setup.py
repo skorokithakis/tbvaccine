@@ -37,8 +37,9 @@ classifiers = [
     "Topic :: Software Development :: Libraries :: Python Modules",
 ]
 
-install_requires = ["pygments", "appdirs"]
-tests_require = ["pep8", "pytest"] + install_requires
+INSTALL_REQUIRES = ["pygments", "appdirs"]
+TESTS_REQUIRE = ["pep8", "pytest"] + INSTALL_REQUIRES
+EXTRAS_REQUIRE = {":sys_platform == 'win32'": ["colorama>=0.2.5"]}
 
 setup(
     name="tbvaccine",
@@ -46,13 +47,14 @@ setup(
     author="Stavros Korokithakis",
     author_email="hi@stavros.io",
     url="https://github.com/skorokithakis/tbvaccine/",
-    description="A utility that cures the horrible traceback displays in Python, " "making them more readable.",
+    description="A utility that cures the horrible traceback displays in Python, making them more readable.",
     long_description=open("README.rst").read(),
     license="MIT",
     classifiers=classifiers,
     packages=["tbvaccine"],
-    install_requires=install_requires,
-    tests_require=tests_require,
+    install_requires=INSTALL_REQUIRES,
+    extras_require=EXTRAS_REQUIRE,
+    tests_require=TESTS_REQUIRE,
     test_suite="tbvaccine.tests",
     entry_points={"console_scripts": ["tbvaccine=tbvaccine.cli:main"]},
     cmdclass={"install_lib": InstallLibWithPTH},
