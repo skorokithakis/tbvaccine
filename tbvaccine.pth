@@ -1,1 +1,1 @@
-import os; exec("if os.environ.get('TBVACCINE'):\n    import tbvaccine\n    tbvaccine.add_hook(isolate=True)")
+import os; exec("if os.environ.get('TBVACCINE') == '1':\n    import tbvaccine\n    tbvaccine.add_hook(isolate=True)")
