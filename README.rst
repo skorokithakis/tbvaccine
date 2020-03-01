@@ -54,6 +54,12 @@ Or fish::
 
     set -x TBVACCINE=1
 
+If you want to prettify tracebacks even when stderr is not a tty, set
+`TBVACCINE_FORCE` to 1::
+
+    export TBVACCINE=1
+    export TBVACCINE_FORCE=1
+    python -c '1/0' 2>&1 | cat  # pretty!
 
 NOTE: If you're on Ubuntu, you most likely have Apport installed, which overrides
 TBVaccine's hook with its own. To disable Apport for Python, delete a file named
